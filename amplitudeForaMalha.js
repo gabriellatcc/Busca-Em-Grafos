@@ -48,7 +48,6 @@ function amplitude(origem, destino, limiteMax) {
 
     //laco para percorrer os niveis
     var arrayPontosPassados = [origem];
-
     var lacoAtual = 0;
     var caminhoValido = [
         //nivel,
@@ -59,25 +58,36 @@ function amplitude(origem, destino, limiteMax) {
     while(lacoAtual < limiteMax && !arrayPontosPassados.includes(destino))
     {
         console.log("\n1. laco atual: " + lacoAtual);
-        // Redefinir origem
-        //PASSARPARA O PROXIMO NIVEL ED ESTINO VALIDO
         console.log("\n2. quantidade de ligacoes: " + ligacoes.length);
         //eu acho que tem como colocar uma condicao no for ja
         for(var pontoPassado=0; pontoPassado < arrayPontosPassados.length; pontoPassado++){
             for(var indiceLigacao=0; indiceLigacao < ligacoes.length; indiceLigacao++)
             {
-                if(ligacoes[indiceLigacao][0].includes(arrayPontosPassados) || ligacoes[indiceLigacao][1].includes(arrayPontosPassados))
+                //se no indice 0 do array ligacoes tiver uma das letras/pontos do array de pontos passados
+                //ou se tiver no indice 1 do array ligacoes tiver uma das letras/pontos do array de pontos passados
+                if(ligacoes[indiceLigacao][0].includes(arrayPontosPassados[pontoPassado]) || ligacoes[indiceLigacao][1].includes(arrayPontosPassados[pontoPassado]))
                 {
                     console.log("\n3. ligacao que tem ponto ja passado " + ligacoes[indiceLigacao]);
-                    caminhoValido.push(lacoAtual, ligacoes[indiceLigacao]);
-                    console.log("\n4. caminhoValido: " + caminhoValido);
-                    break;
+                    //comparar se ja tem em caminho valido e nao adicionar repetido
+                    if (caminhoValido.includes([lacoAtual-1], ligacoes[indiceLigacao])){
+                        console.log("\n3.1. ligacao ja existe em caminhoValido: " + ligacoes[indiceLigacao]);
+                    } else {
+                        caminhoValido.push(lacoAtual, ligacoes[indiceLigacao]);
+                    }
+                    //ponto diferente do que foi passado é adicionado no array
+                    if(ligacoes[indiceLigacao][0] == arrayPontosPassados[pontoPassado] && !arrayPontosPassados.includes(ligacoes[indiceLigacao][1])){
+                        arrayPontosPassados.push(ligacoes[indiceLigacao][1]);
+                        console.log("\n4.1i. novo ponto adicionado ao arrayPontosPassados: " + ligacoes[indiceLigacao][1]);
+                        lacoAtual ++;
+                    } else if(ligacoes[indiceLigacao][1] == arrayPontosPassados[pontoPassado] && !arrayPontosPassados.includes(ligacoes[indiceLigacao][0])){
+                        arrayPontosPassados.push(ligacoes[indiceLigacao][0]);
+                        console.log("\n4.1e. novo ponto adicionado ao arrayPontosPassados: " + ligacoes[indiceLigacao][0]);
+                        lacoAtual ++;
+                    }
                 }
             }
+            console.log("\n4.2. arrayPontosPassados: " + arrayPontosPassados);
         }
-        console.log("\n5. arrayPontosPassados: " + arrayPontosPassados);
-
-        lacoAtual ++;
     }
 
 
