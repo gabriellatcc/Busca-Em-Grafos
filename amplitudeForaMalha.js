@@ -69,6 +69,8 @@ function amplitude(origem, destino, limiteMax) {
     {
 
         console.log("\n1. laco atual: " + lacoAtual+ "\narrayPontosPassados: " + arrayPontosPassados);
+        var fronteiraAtual = arrayPontosPassados.slice();
+        // snapshot: só quem já era conhecido ANTES desse nível
         for(var pontoPassado=0; pontoPassado < arrayPontosPassados.length; pontoPassado++){
             for(var indiceLigacao=0; indiceLigacao < ligacao.length; indiceLigacao++)
             {
@@ -98,9 +100,6 @@ function amplitude(origem, destino, limiteMax) {
                             console.log("\n3.ielse. novo ponto adicionado ao arrayPontosPassados: " + ligacao[indiceLigacao][0]);
                         }
                     }
-                        else{
-                            console.log("FOI PRO CARALHO"+ ligacao[indiceLigacao]);
-                        }
                     }
                     else {
                         console.log("\n2.1. ligacao ja existe em caminhoValido: " + ligacao[indiceLigacao]);
@@ -108,10 +107,10 @@ function amplitude(origem, destino, limiteMax) {
                     }
                 }
             }
-            lacoAtual++;
-            console.log("\n\nLACO ATUAL: "+ lacoAtual)
-
         }
+        arrayPontosPassados.push(...pontosNovosDoNivel);
+        lacoAtual++;
+        console.log("\n\nLACO ATUAL: "+ lacoAtual)
         console.log("\n4. arrayPontosPassados: " + arrayPontosPassados);
     }
 
