@@ -30,22 +30,6 @@ console.log(
 );
 
 function amplitude(origem, destino, limiteMax) {
-    //vou comparar a origem e depois com todos os destinos do array e origens
-    //armazenar os que a origem aparece:
-    // defino o nivel 2
-    // utilizo os que armazenei para comparar com onde aparecem  e armazeno
-    // defino o proximo nivel
-
-    //a variavel que vai servir de comparacao vai mudar smepre que sai de um nivel e entra em outro
-    // mapear ligacao com A
-    // mapear ligacao com I, C
-    // mapear ligacao com G, D, E
-    // mapear ligacao com E, B, G
-    // mapear ligacao com C, /, I, GJ
-    // mapear ligacao com D, /, /, H
-    // mapear ligacao com B, /, /, B
-
-    //laco para percorrer os niveis
     var arrayPontosPassados = [origem];
     var lacoAtual = 0;
     class CaminhoValido {
@@ -69,16 +53,17 @@ function amplitude(origem, destino, limiteMax) {
     {
 
         console.log("\n1. laco atual: " + lacoAtual+ "\narrayPontosPassados: " + arrayPontosPassados);
+        // slice o array de pontos passados e copia para comparar pontos ja conhecidos antes desse nível
         var fronteiraAtual = arrayPontosPassados.slice();
-        // snapshot: só quem já era conhecido ANTES desse nível
-        for(var pontoPassado=0; pontoPassado < arrayPontosPassados.length; pontoPassado++){
+        var pontosNovosDoNivel = [];
+        for(var pontoPassado=0; pontoPassado < fronteiraAtual.length; pontoPassado++){
             for(var indiceLigacao=0; indiceLigacao < ligacao.length; indiceLigacao++)
             {
                 //1a verificacao: se alguma letra seja ela a ou b da ligacao tem algum dos pontos passados
                 if(ligacao[indiceLigacao][0]
-                    .includes(arrayPontosPassados[pontoPassado])
+                    .includes(fronteiraAtual[pontoPassado])
                 || ligacao[indiceLigacao][1]
-                    .includes(arrayPontosPassados[pontoPassado]))
+                    .includes(fronteiraAtual[pontoPassado]))
                 {
                     console.log("\n2. ligacao que tem ponto ja passado " + ligacao[indiceLigacao]);
                     //2a verificacao: se o caminho valido não tem no laco anterior uma ligacao
@@ -87,30 +72,28 @@ function amplitude(origem, destino, limiteMax) {
                         objetoDoNivel = new CaminhoValido(lacoAtual);
                         arrayCaminhosValidosPorNivel.push(objetoDoNivel);
                     }
+
                     if (!objetoDoNivel.temLigacao(ligacao[indiceLigacao])){
                         objetoDoNivel.adicionarLigacao(ligacao[indiceLigacao]);
-                        if(ligacao[indiceLigacao][0] == arrayPontosPassados[pontoPassado]){
-                    if (!arrayPontosPassados.includes(ligacao[indiceLigacao][1])) {
-                        arrayPontosPassados.push(ligacao[indiceLigacao][1]);
-                        console.log("\n3.if. novo ponto adicionado ao arrayPontosPassados: " + ligacao[indiceLigacao][1]);
-                    }
-                    } else if(ligacao[indiceLigacao][1] == arrayPontosPassados[pontoPassado]){
-                        if (!arrayPontosPassados.includes(ligacao[indiceLigacao][0])) {
-                            arrayPontosPassados.push(ligacao[indiceLigacao][0]);
-                            console.log("\n3.ielse. novo ponto adicionado ao arrayPontosPassados: " + ligacao[indiceLigacao][0]);
+                        var pontoDescoberto =
+                            ligacao[indiceLigacao][0] == fronteiraAtual[pontoPassado]
+                                ? ligacao[indiceLigacao][1]
+                                : ligacao[indiceLigacao][1] == fronteiraAtual[pontoPassado]
+                                    ? ligacao[indiceLigacao][0]
+                                    : null;
+
+                        if (pontoDescoberto
+                            && !arrayPontosPassados.includes(pontoDescoberto)
+                            && !pontosNovosDoNivel.includes(pontoDescoberto)) {
+                            pontosNovosDoNivel.push(pontoDescoberto);
+                            console.log("\n3. novo ponto descoberto no nivel " + lacoAtual + ": " + pontoDescoberto);
                         }
-                    }
-                    }
-                    else {
-                        console.log("\n2.1. ligacao ja existe em caminhoValido: " + ligacao[indiceLigacao]);
-                        continue;
                     }
                 }
             }
         }
         arrayPontosPassados.push(...pontosNovosDoNivel);
         lacoAtual++;
-        console.log("\n\nLACO ATUAL: "+ lacoAtual)
         console.log("\n4. arrayPontosPassados: " + arrayPontosPassados);
     }
 
